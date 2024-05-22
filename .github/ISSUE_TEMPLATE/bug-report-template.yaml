@@ -1,0 +1,63 @@
+---
+name: "[Bug] Report"
+description: Create a bug report to help us improve
+title: "[Bug] <TITLE>"
+labels: ["bug"]
+assignees:
+  - dependabot
+  
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # Please Fill out the Form to the best of your ability.
+        ## Briefly what we're looking for:
+
+  - type: checkboxes
+    attributes:
+      label: Which Aspect  is an Issue
+      description: You may select more than one
+      options:
+        - label: CLI Tools
+        - label: SubModule
+        - label: Installation & Depenedencies
+        - label: Runtime Environment
+
+  - type: input
+    attributes:
+      label: What Version?
+      placeholder: |
+        Please Copy Paste a TAG or SHA from `git rev-parse --short=7 HEAD`
+    validations:
+      required: true
+
+  - type: dropdown
+    attributes:
+      label: "Operating System"
+      options:
+        - Linux
+        - MacOS (Intel)
+        - MacOS (Apple Silicon/AMD)
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: A Concise Description or Log of issue (If Possible)
+      description: A Log file can be drag and dropped. Step by step of what you did to reproduce.
+      placeholder: |
+        Files can be Drag & Dropped HERE 
+  - type: textarea
+    attributes:
+      label: Expected Result (If Possible)
+      description: Please Provide What was Expected
+      placeholder: |
+        Files can be Drag & Dropped HERE 
+
+  - type: markdown
+    attributes:
+      value: "## Thank you for contributing to our project!"
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report.

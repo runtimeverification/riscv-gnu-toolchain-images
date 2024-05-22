@@ -1,0 +1,34 @@
+---
+name: 'Build And Test'
+on:
+  pull_request:
+  workflow_dispatch:
+# Stop in progress workflows on the same branch and same workflow to use latest committed code
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: 'Build And Test'
+    runs-on: [self-hosted, linux, flyweight-ephemeral]
+    steps:
+      - name: 'Check out code'
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: 'Set up Docker'
+        run: |
+          COMMIT="$(git rev-parse --short=7 HEAD)"
+          docker build . --file Dockerfile --build-arg COMMIT="${COMMIT}" --tag dockerhub-runtimeverification.com/ci:${COMMIT}
+          docker run --name gh-runner-ci --rm -it --detach --workdir /opt/workspace --user $(id -u):$(id -g) -v ${HOME}:${HOME} -v "$(pwd):/opt/workspace" -v "/etc/passwd:/etc/passwd:ro" -v "/etc/group:/etc/group:ro" dockerhub-runtimeverification.com/ci:${COMMIT}
+      - name: 'Build Source'
+        run: docker exec -t gh-runner-ci /bin/bash -c 'echo "make build -j4"'
+      - name: 'Unit Test Source'
+        run: docker exec -t gh-runner-ci /bin/bash -c 'echo "make -j4 test"'
+      - name: 'Test Tools '
+        run: docker exec -t gh-runner-ci /bin/bash -c 'echo "make -j4 test-tools"'
+      - name: 'Tear down Docker'
+        if: always()
+        run: |
+          docker stop gh-runner-ci

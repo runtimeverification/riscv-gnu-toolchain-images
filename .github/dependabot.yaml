@@ -1,0 +1,13 @@
+version: 2
+
+updates:
+  - package-ecosystem: "docker"
+    directory: "/"
+    labels:
+      - "dependabot"
+      - "docker"
+      - "automerge"
+    reviewers:
+      - ""
+    schedule:
+      interval: "monthly"

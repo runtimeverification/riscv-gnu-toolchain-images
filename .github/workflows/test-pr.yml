@@ -1,0 +1,33 @@
+name: 'Test PR'
+on:
+  pull_request:
+    branches:
+      - 'master'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  build-image:
+    name: 'Build Image'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Check out code'
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          path: riscv-gnu-toolchain-images
+      - name: 'Build Jammy docker image'
+        uses: ./.github/actions/with-docker
+        with:
+          os: ubuntu
+          distro: jammy
+          image-tag: runtimeverificationinc/riscv-gnu-toolchain
+      - name: 'Smoke test'
+        shell: bash {0}
+        run: |
+          cd riscv-gnu-toolchain-images/test
+          riscv64-unknown-elf-gcc -S hello.c -o hello.S.out
+          diff hello.S.out hello.S

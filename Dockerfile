@@ -23,7 +23,8 @@ RUN    apt-get update        \
        patchutils            \
        bc                    \
        zlib1g-dev            \
-       libexpat-dev
+       libexpat-dev          \
+       git
 
 ENV RISCV=/opt/riscv
 ENV PATH=$PATH:$RISCV/bin

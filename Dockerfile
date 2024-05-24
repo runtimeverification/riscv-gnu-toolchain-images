@@ -31,8 +31,14 @@ ENV PATH=$PATH:$RISCV/bin
 
 ARG TOOLCHAIN_VERSION=2024.04.12
 RUN    git clone --recursive https://github.com/riscv/riscv-gnu-toolchain -b ${TOOLCHAIN_VERSION} \
+    && echo "1"                                                                                   \
     && cd riscv-gnu-toolchain                                                                     \
+    && echo "2"                                                                                   \
     && ./configure --prefix=$RISCV --enable-multilib                                              \
+    && echo "3"                                                                                   \
     && make                                                                                       \
+    && echo "4"                                                                                   \
     && cd ..                                                                                      \
-    && rm -rf riscv-gnu-toolchain
+    && echo "5"                                                                                   \
+    && rm -rf riscv-gnu-toolchain                                                                 \
+    && echo "6"

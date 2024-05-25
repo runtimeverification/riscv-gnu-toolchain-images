@@ -27,5 +27,5 @@ jobs:
         shell: bash {0}
         run: |
           cd test
-          riscv64-unknown-elf-gcc -S hello.c -o hello.S.out
+          /opt/riscv/bin/riscv64-unknown-elf-gcc -S hello.c -o hello.S.out
           diff hello.S.out hello.S

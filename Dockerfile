@@ -42,3 +42,4 @@ RUN    git clone --recursive https://github.com/riscv/riscv-gnu-toolchain -b ${T
     && echo "5"                                                                                   \
     && rm -rf riscv-gnu-toolchain                                                                 \
     && echo "6"
+RUN ls /opt/riscv/bin

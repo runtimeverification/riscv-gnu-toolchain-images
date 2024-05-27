@@ -1,0 +1,54 @@
+name: 'With Docker'
+description: 'Run a given stage with Docker Image'
+inputs:
+  image-tag:
+    description: 'Docker image tag to use'
+    required: true
+    type: string
+  os: 
+    description: 'OS to setup Docker for.'
+    required: false
+    type: string
+    default: 'ubuntu'
+  distro:
+    description: 'Distribution to setup Docker for.'
+    required: false
+    type: string
+    default: 'jammy'
+  dockerfile:
+    description: 'Hardcode the path of the dockerfile to use.'
+    required: false
+    type: string
+    default: './Dockerfile'
+  publish:
+    description: 'Whether to publish the image to dockerhub or not.'
+    required: false
+    default: 'false'
+  dockerhub-password:
+    description: 'API key for dockerhub.'
+    required: false
+runs:
+  using: 'composite'
+  steps:
+  - name: 'Set up Docker'
+    shell: bash {0}
+    run: |
+      set -euxo pipefail
+
+      BASE_OS=${{ inputs.os }}
+      BASE_DISTRO=${{ inputs.distro }}
+
+      toolchain_version=$(cat version)
+      tag_name=${{ inputs.image-tag }}:${BASE_OS}-${BASE_DISTRO}-${toolchain_version}
+
+      USER=github-user
+      GROUP=${USER}
+      USER_ID=1000
+      GROUP_ID=${USER_ID}
+
+      docker build .                           \
+        --file ${{ inputs.dockerfile }}        \
+        --build-arg BASE_OS=${BASE_OS}         \
+        --build-arg BASE_DISTRO=${BASE_DISTRO} \
+        --build-arg TOOLCHAIN_VERSION=${toolchain_version}   \
+        --tag ${tag_name}

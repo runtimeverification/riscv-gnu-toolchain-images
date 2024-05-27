@@ -27,18 +27,19 @@ jobs:
         shell: bash {0}
         run: |
           toolchain_version=$(cat version)
-          tag_name=riscv-gnu-toolchain:ubuntu-jammy-${toolchain_version}
           user=$(id -un)
           group=$(id -gn)
           docker run                                \
-                 --name ${tag_name}                 \
+                 --name riscv-gnu-toolchain         \
                  --rm -it                           \
                  --detach                           \
                  --workdir /opt/workspace           \
                  --user ${user}:${group}            \
                  -v "$(pwd):/opt/workspace"         \
-                 runtimeverificationinc/${tag_name}
-          docker exec -t ${tag_name} /bin/bash -c ' \
-                 cd test &&                         \
+                 runtimeverificationinc/riscv-gnu-toolchain:ubuntu-jammy-${toolchain_version}
+          docker exec -t riscv-gnu-toolchain /bin/bash -c '           \
+                 cd test &&                                           \
                  riscv64-unknown-elf-gcc -S hello.c -o hello.S.out && \
-                 diff hello.S.out hello.S'
+                 diff hello.S.out hello.S                             \
+                 '
+          docker stop --time=0 riscv-gnu-toolchain

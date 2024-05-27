@@ -27,14 +27,11 @@ jobs:
         shell: bash {0}
         run: |
           toolchain_version=$(cat version)
-          user=$(id -un)
-          group=$(id -gn)
           docker run                                \
                  --name riscv-gnu-toolchain         \
                  --rm -it                           \
                  --detach                           \
                  --workdir /opt/workspace           \
-                 --user ${user}:${group}            \
                  -v "$(pwd):/opt/workspace"         \
                  runtimeverificationinc/riscv-gnu-toolchain:ubuntu-jammy-${toolchain_version}
           docker exec -t riscv-gnu-toolchain /bin/bash -c '           \
